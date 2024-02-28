@@ -3,6 +3,7 @@ from sanic import Sanic
 import sanic
 from sanic.response import text
 import statistics
+import json
 
 school = ratemyprofessor.get_school_by_name("Northeastern University")
 app = Sanic("app")
@@ -36,9 +37,14 @@ async def find_prof_ratings(courses):
             print("Would Take Again: N/A")
 
 
-async def make_rating(professor, course, rating_weight=1, difficulty_weight=1, take_again_weight=1):
-    course_ratings = (statistics.mean(map(lambda x: x.rating, professor.get_ratings(course)))) / 5 * rating_weight
-    course_difficulty = (statistics.mean(
-        map(lambda x: x.rating, professor.get_difficulty(course)))) / 5 * difficulty_weight
-    course_take_again = statistics.mean(map(lambda x: x.rating, professor.get_take_again(course))) * take_again_weight
-    return (course_ratings + course_difficulty + course_take_again) / 3
+def make_ratings(file, professor, course, rating_weight = 1 , difficulty_weight  = 1, take_again_weight = 1):
+    """Only applies if user wants the course to be easy"""
+    f = open(file,"r")
+    data = json.load(f)
+
+    for x in range(len(data)):
+        if data[x]["course"] == course:
+            course_rating = (data[x]["rating"])/5 * rating_weight
+            course_difficulty = (data[x]["difficulty"])/5 * difficulty_weight
+            course_take_again = (data[x]["take_again"])/5 * take_again_weight
+            return (course_rating + course_difficulty + course_take_again)/3
