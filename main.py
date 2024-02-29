@@ -37,10 +37,9 @@ async def find_prof_ratings(courses):
             print("Would Take Again: N/A")
 
 
-def make_ratings(file, professor, course, rating_weight = 1 , difficulty_weight  = 1, take_again_weight = 1):
+def make_ratings(data, professor, course, rating_weight = 1 , difficulty_weight  = 1, take_again_weight = 1):
     """Only applies if user wants the course to be easy"""
-    f = open(file,"r")
-    data = json.load(f)
+    data = data
 
     for x in range(len(data)):
         if data[x]["course"] == course:
