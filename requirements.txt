@@ -1,3 +1,4 @@
 RateMyProfessorAPI
 sanic
 motor
+python-dotenv
