@@ -10,7 +10,6 @@ dotenv.load_dotenv()
 school = ratemyprofessor.get_school_by_name("Northeastern University")
 app = sanic.Sanic("unical")
 app.blueprint(blueprints.blueprints)
-app.static('/', 'index.html')
 
 
 @app.after_server_start
