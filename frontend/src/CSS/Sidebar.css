@@ -1,0 +1,29 @@
+.sidebar-container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--sidebar-bg);
+}
+
+.sidebar-grid {
+    display: grid;
+    height: calc(3 * calc(13 * var(--SPACE)));
+    grid-template-rows: 1rem repeat();
+}
+
+.sidebar-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 100ms;
+    cursor: pointer;
+}
+
+.sidebar-button-container svg {
+    width: 50%;
+    height: 50%;
+}
+
+/* ---------- INTERACTIONS ------------- */
+.sidebar-button-container:hover {
+    background-color: var(--secondary-blue);
+}

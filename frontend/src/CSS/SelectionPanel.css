@@ -1,0 +1,26 @@
+.selection-panel-container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--selection-panel-bg);
+}
+
+.selection-panel-header-container {
+    display: flex;
+    justify-content: center;
+    padding-top: calc(4 * var(--SPACE));
+    padding-bottom: calc(4 * var(--SPACE));
+    background-color: var(--selection-panel-bg);
+}
+
+.selection-panel-header-content {
+    text-align: center;
+}
+
+.selection-panel-header-content h1 {
+    font-size: 20px;
+}
+
+.selection-panel-header-content p {
+    font-size: 16px;
+    font-weight: 0;
+}
