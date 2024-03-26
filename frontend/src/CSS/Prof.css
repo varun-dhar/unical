@@ -1,0 +1,22 @@
+.prof-info-container {
+    display: flex;
+    align-items: center;
+}
+
+.prof-name {
+    margin-right: calc(2 * var(--SPACE));
+}
+
+.prof-info-score-display-container {
+    background-color: green;
+    width: calc(4.5 * var(--SPACE));
+    aspect-ratio: 1;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prof-info-score-display-container p {
+    font-size: var(--prof-info-score-text-size);
+}

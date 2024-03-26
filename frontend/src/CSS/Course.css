@@ -1,0 +1,106 @@
+.course-item-element {
+    background-color: var(--course-item-bg);    
+    width: calc(100% - calc(3 * var(--SPACE)));
+    border-radius: var(--SPACE);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.course-item-element-container {
+    width: calc(100% - calc(8 * var(--SPACE)));
+    padding-top: calc(var(--SPACE) * 3);
+    padding-bottom: calc(var(--SPACE) * 3);
+}
+
+.course-item-header-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-bottom: calc(3 * var(--SPACE));
+    width: 100%;
+    margin: 0 auto;
+}
+
+.course-item-header-text {
+    display: flex;
+    align-items: center;
+}
+
+.course-item-header-container h1 {
+    font-size: var(--course-header-text-size);
+    margin: 0;
+    width: fit-content;
+    font-weight: var(--bold-font-weight);
+    margin-right: calc(1.5 * var(--SPACE));
+}
+
+.course-item-header-container p {
+    font-size: var(--course-header-text-size);
+    margin: 0;
+    width: fit-content;
+    color: var(--text-gray);
+}
+
+.course-item-header-info-button {
+    display: flex;
+    justify-content: right;
+}
+
+.course-item-header-container svg {
+    fill: white;
+    width: calc(4 * var(--SPACE));
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course-item-info-type-time {
+    display: flex;
+    align-items: center;
+}
+
+.course-item-info-credits-location {
+    display: flex;
+    align-items: center;
+    margin-top: calc(0.5 * var(--SPACE));
+    padding-bottom: calc(1.5 * var(--SPACE));
+}
+
+.course-item-info-type-time h1,
+.course-item-info-credits-location h1 {
+    font-size: var(--course-info-text-size);
+    margin: 0;
+    width: fit-content;
+    font-weight: var(--bold-font-weight);
+    margin-right: calc(1.5 * var(--SPACE));
+}
+
+.course-item-info-type-time p,
+.course-item-info-credits-location p {
+    font-size: var(--course-info-text-size);
+    margin: 0;
+    width: fit-content;
+    font-weight: 0;
+    margin-right: calc(1.5 * var(--SPACE));
+}
+
+.course-date-element-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--course-date-bg);
+    width: calc(5.5 * var(--SPACE));
+    font-size: var(--course-date-text-size);
+    aspect-ratio: 1;
+    border-radius: 100%;
+}
+
+.course-dates-container {
+    width: 100%;
+    display: grid;
+    column-gap: var(--SPACE);
+    grid-template-columns: repeat(7, auto);
+    margin-top: calc(var(--SPACE) * 1.5);
+}

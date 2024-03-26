@@ -25,11 +25,22 @@ p {
 
 :root {
   --SPACE: 6px;
+  --bold-font-weight: 500;
 
   --bg: #101010;
   --sidebar-bg: #0A0A0A;
   --selection-panel-bg: #141414;
+  --course-item-bg: #0A0A0A;
+  --course-date-bg: #282828;
 
   --main-blue: #4178B8;
   --secondary-blue: #445262;
+
+  --text-white: #FFFFFF;
+  --text-gray: #d2d2d2;
+
+  --course-header-text-size: 18px;
+  --course-info-text-size: 15px;
+  --prof-info-score-text-size: 12px;
+  --course-date-text-size: 15px;
 }

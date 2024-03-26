@@ -18,9 +18,12 @@
 
 .selection-panel-header-content h1 {
     font-size: 20px;
+    font-weight: var(--bold-font-weight);
+    color: var(--text-white);
 }
 
 .selection-panel-header-content p {
+    color: var(--text-gray);
     font-size: 16px;
     font-weight: 0;
 }
