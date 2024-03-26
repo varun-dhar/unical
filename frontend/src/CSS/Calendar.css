@@ -1,0 +1,61 @@
+.calendar-container {
+    width: 1500px;
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg)
+  }
+
+  .calendar-body {
+    width: 100%;
+    flex-grow: 1;
+    flex-direction: column;
+    display: grid;
+    gap: 0px 100px;
+  }
+  
+  .table-header {
+    height: 30px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: jucenter;
+    margin-left: 50px;
+  }
+
+  .central {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .boxes {
+    height: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+
+  .boxes td, .boxes th {
+    border: 1px solid #ddd;
+    width: 100%;
+    height: calc(8.6 * var(--SPACE));
+    text-align: center;
+  }
+  
+  .hours {
+    position: absolute;
+    left: calc(68 * var(--SPACE));
+  }
+  
+  .weekday {
+    width: 100%;
+    text-align: center;
+  }
+  
+
+  .calendar-hours {
+    border: 0px solid #ddd;
+    width: 10px;
+  }
+  
