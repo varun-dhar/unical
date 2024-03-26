@@ -1,4 +1,6 @@
-RateMyProfessorAPI
 sanic
+pymongo
 motor
 python-dotenv
+gql[aiohttp]
+aiohttp[speedups]

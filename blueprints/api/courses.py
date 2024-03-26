@@ -1,17 +1,12 @@
 import re
 import asyncio
-import datetime
 
 import sanic
 
-course_re = re.compile('^([A-Z]+)([0-9]+)$')
+course_re = re.compile('^([A-Z]{2}|[A-Z]{4})([0-9]{4})$')
 n_to_day = ['S', 'M', 'T', 'W', 'R', 'F', 'S']
 
 bp = sanic.Blueprint('api')
-
-
-async def get_prof_data(name):
-	pass
 
 
 async def azip(coro, item):
@@ -39,61 +34,78 @@ async def get_course_data(request: sanic.Request):
 	for match in matches:
 		subject = match.group(1)
 		class_id = match.group(2)
-		course_ids.add([subject, class_id])
+		course_ids.add((subject, class_id))
 		coreq_results.append(request.app.ctx.db['classes'].find_one({'subject': subject,
-																 'classId': class_id,
-																 'termId': term_id
-																 },
-																{'coreqs': 1, '_id': 0}))
+																	 'classId': class_id,
+																	 'termId': term_id
+																	 },
+																	{'coreqs': 1, '_id': 0}))
 	for coro in asyncio.as_completed(coreq_results):
 		coreqs = await coro
 		if coreqs is None:
 			continue
 		for coreq in coreqs['coreqs']['values']:
-			course_ids.add([coreq['subject'], coreq['classId']])
+			course_ids.add((coreq['subject'], coreq['classId']))
 
 	course_data = {}
 	for coro in asyncio.as_completed(map(lambda course_id:
 										 azip(request.app.ctx.db['sections'].find({'subject': course_id[0],
 																				   'classId': course_id[1],
 																				   'termId': term_id,
-																				   'campus': campus} | honors_filter,
+																				   'campus': campus,
+																				   '$or': [
+																					   {'seatsRemaining': {'$gt': 0}},
+																					   {'waitRemaining': {
+																						   '$gt': 0}}]} | honors_filter,
 																				  {'crn': 1,
 																				   'waitRemaining': 1,
 																				   'seatsRemaining': 1,
 																				   'profs': 1,
 																				   'meetings': 1,
+																				   'classType': 1,
 																				   '_id': 0
 																				   }).to_list(None),
-											  ''.join(course_id)),
+											  course_id),
 										 course_ids)):
-		sections, name = await coro
+		sections, course_id = await coro
+		name = ''.join(course_id)
 
 		if len(sections) == 0:
 			continue
 
-		course_data[name] = []
+		course_record = await request.app.ctx.db['classes'].find_one({'subject': course_id[0], 'classId': course_id[1]},
+																	 {'maxCredits': 1, 'nupath': 1, '_id': 0})
+		course_data[name] = {'sections': [], 'credits': course_record['maxCredits'], 'nupath': course_record['nupath']}
 		for section in sections:
 			section_data = {'crn': section['crn'], 'seatsRemaining': section['seatsRemaining'],
-							'waitRemaining': section['waitRemaining'], 'profs': [],
+							'waitRemaining': section['waitRemaining'], 'profs': [], 'classType': section['classType'],
 							'classTimes': [], 'examTimes': []}
 			for prof in section['profs']:
-				section_data['profs'].append(await get_prof_data(prof))
+				record = await request.app.ctx.db['profs'].find_one({'name': prof},
+																	{'_id': 0, 'name': 1,
+																	 'overall_rating': 1,
+																	 'overall_difficulty': 1,
+																	 'percent_take_again': 1,
+																	 'n_ratings': 1,
+																	 'ratings': 1})
+				if record is None or 'ratings' not in record:
+					continue
+				record['course_rating'] = record['ratings'].get(name, {})
+				del record['ratings']
+				section_data['profs'].append(record)
 			for meeting in section['meetings']:
 				for day, time in meeting['times'].items():
 					day = n_to_day[int(day)]
 					time = time[0]
-					start = datetime.datetime.utcfromtimestamp(time['start'])
-					end = datetime.datetime.utcfromtimestamp(time['end'])
 					meeting_time = {'day': day,
-									'start': start.strftime('%I:%M %p'),
-									'end': end.strftime('%I:%M %p'),
+									'start': time['start'],
+									'end': time['end'],
 									'location': meeting['where']}
 					if meeting['type'] == 'Class':
 						section_data['classTimes'].append(meeting_time)
 					elif meeting['type'] == 'Final Exam':
 						section_data['examTimes'].append(meeting_time)
 
-			course_data[name].append(section_data)
+			course_data[name]['sections'].append(section_data)
 
 	return sanic.response.json(course_data)

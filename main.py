@@ -1,4 +1,3 @@
-import ratemyprofessor
 import sanic
 import motor.motor_asyncio
 import dotenv
@@ -7,7 +6,6 @@ import blueprints
 
 dotenv.load_dotenv()
 
-school = ratemyprofessor.get_school_by_name("Northeastern University")
 app = sanic.Sanic("unical")
 app.blueprint(blueprints.blueprints)
 
