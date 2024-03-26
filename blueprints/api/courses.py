@@ -108,4 +108,5 @@ async def get_course_data(request: sanic.Request):
 
 			course_data[name]['sections'].append(section_data)
 
+	course_data['original_request'] = courses
 	return sanic.response.json(course_data)
