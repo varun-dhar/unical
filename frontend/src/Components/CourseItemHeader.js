@@ -5,7 +5,7 @@ export default function CourseItemHeader(props) {
     return (
         <div className="course-item-header-container">
             <div className="course-item-header-text">
-                <h1>{props.course["subject"]}{props.course["classID"]}-01</h1>
+                <h1>{props.course["courseName"]}-{props.course["courseIndex"].length < 2 ? '0' + props.course["courseIndex"] : props.course["courseIndex"]}</h1>
                 <p>CRN {props.course["crn"]}</p>
             </div>
 
