@@ -21,7 +21,36 @@ async def run_scrape():
 													   tlsCertificateKeyFile='../' + os.getenv('MONGODB_CERT'),
 													   io_loop=asyncio.get_event_loop())
 	db = db_client['test']
-	await scrape_graphql(db)
+
+	async for record in db['sections'].find(
+			{'termId': {'$in': ['202460', '202450', '202440']}, 'campus': 'Online', 'honors': False},
+			{'crn': 1, 'subject': 1, 'classId': 1, 'profs': 1, '_id': 0}):
+		req_class = await db['classes'].find_one(
+			{'subject': record['subject'], 'classId': record['classId'],
+			 'nupath': {'$all': ['Difference/Diversity', 'Interpreting Culture']}},
+			{'nupath': 1, 'name': 1, 'desc': 1, '_id': 0})
+
+		if req_class is not None:
+			rating = 'N/A'
+			difficulty = 'N/A'
+			class_rating = 'N/A'
+			class_difficulty = 'N/A'
+			prof = {'name': 'N/A'}
+			if len(record['profs']) > 0:
+				prof = record['profs'][0]
+				prof = await db['profs'].find_one({'name': prof})
+				if prof is not None:
+					rating = prof['overall_rating'] if 'overall_rating' in prof else rating
+					difficulty = prof['overall_difficulty'] if 'overall_difficulty' in prof else difficulty
+					class_name = f'{record["subject"]}{record["classId"]}'
+					class_rating = prof['ratings'][class_name]['rating'] if 'ratings' in prof and class_name in prof[
+						'ratings'] else class_rating
+					class_difficulty = prof['ratings'][class_name][
+						'difficulty'] if 'ratings' in prof and class_difficulty in prof['ratings'] else class_difficulty
+			print(
+				f'{record["subject"]}{record["classId"]}: (prof: {prof["name"]} prof rating: {rating}, prof difficulty: {difficulty}, class rating: {class_rating}, class difficulty: {class_difficulty}) {req_class["name"]} ({record["crn"]}) ({req_class["nupath"]}): {req_class["desc"]}')
+
+	#await scrape_graphql(db)
 
 
 def get_prof_ratings(prof, record: dict):

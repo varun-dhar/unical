@@ -1,3 +1,4 @@
+import datetime
 import re
 import asyncio
 
@@ -98,8 +99,8 @@ async def get_course_data(request: sanic.Request):
 					day = n_to_day[int(day)]
 					time = time[0]
 					meeting_time = {'day': day,
-									'start': time['start'],
-									'end': time['end'],
+									'start': datetime.datetime.utcfromtimestamp(time['start']).strftime('%I:%M %p'),
+									'end': datetime.datetime.utcfromtimestamp(time['end']).strftime('%I:%M %p'),
 									'location': meeting['where']}
 					if meeting['type'] == 'Class':
 						section_data['classTimes'].append(meeting_time)
@@ -108,5 +109,7 @@ async def get_course_data(request: sanic.Request):
 
 			course_data[name]['sections'].append(section_data)
 
+	for name, data in course_data.items():
+		data['sections'].sort(key=lambda x: x['profs'][0]['overall_rating']-x['profs'][0]['overall_difficulty'] if len(x['profs']) > 0 else 0, reverse=True)
 	course_data['original_request'] = courses
 	return sanic.response.json(course_data)
